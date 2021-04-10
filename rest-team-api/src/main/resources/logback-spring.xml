@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <springProperty scope="context" name="APP_NAME" source="spring.application.name"/>
+  <contextName>${APP_NAME}</contextName>
+  <!--    <springProfile name="prod">-->
+  <springProperty scope="context" name="LOG_DIR" source="team-rest-api.log.dir" defaultValue="logs"/>
+
+  <!-- CONSOLE APPENDER -->
+  <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <Pattern>%black(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %yellow(%C{1.}): %msg%n%throwable
+      </Pattern>
+    </layout>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>TRACE</level>
+    </filter>
+  </appender>
+
+  <!-- ROLLING-FILE APPENDER -->
+  <appender name="RollingFileError" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_DIR}/team-registry-api-rest-api-err.log</file>
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- rollover daily and when the file reaches 20 MegaBytes -->
+      <fileNamePattern>${LOG_DIR}/archived/err/team-registry-api-rest-api-err-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>20MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+      <maxHistory>7</maxHistory>
+    </rollingPolicy>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>ERROR</level>
+    </filter>
+  </appender>
+  <appender name="RollingFileInfo" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_DIR}/team-registry-api-rest-api-info.log</file>
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- rollover daily and when the file reaches 20 MegaBytes -->
+      <fileNamePattern>${LOG_DIR}/archived/info/team-registry-api-rest-api-info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>20MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+      <maxHistory>7</maxHistory>
+    </rollingPolicy>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>INFO</level>
+    </filter>
+  </appender>
+  <appender name="RollingFileTrace" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_DIR}/team-registry-api-rest-api-trace.log</file>
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- rollover daily and when the file reaches 20 MegaBytes -->
+      <fileNamePattern>${LOG_DIR}/archived/info/team-registry-api-rest-api-trace-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>50MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+      <maxHistory>7</maxHistory>
+    </rollingPolicy>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>TRACE</level>
+    </filter>
+  </appender>
+
+  <springProfile name="debug">
+
+    <logger name="org.hibernate.SQL" level="debug" additivity="false">
+      <appender-ref ref="Console"/>
+    </logger>
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="trace" additivity="false">
+      <appender-ref ref="Console"/>
+    </logger>
+    <logger name="org.springframework.orm.jpa" level="debug" additivity="false">
+      <appender-ref ref="Console"/>
+    </logger>
+    <logger name="org.springframework.web.client.RestTemplate" level="debug" additivity="false">
+      <appender-ref ref="Console"/>
+    </logger>
+    <logger name=" org.springframework.security" level="trace" additivity="false">
+      <appender-ref ref="Console"/>
+    </logger>
+    <logger name="io.swagger.models.parameters.AbstractSerializableParameter" level="ERROR" additivity="false">
+      <appender-ref ref="Console"/>
+    </logger>
+  </springProfile>
+
+  <springProfile name="info">
+    <logger name="my.approach.team" level="debug" additivity="false">
+      <appender-ref ref="Console"/>
+    </logger>
+    <logger name="org.hibernate.SQL" level="debug" additivity="false">
+      <appender-ref ref="Console"/>
+    </logger>
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="trace" additivity="false">
+      <appender-ref ref="Console"/>
+    </logger>
+    <logger name="org.springframework.orm.jpa" level="debug" additivity="false">
+      <appender-ref ref="Console"/>
+    </logger>
+    <logger name="org.springframework.web.client.RestTemplate" level="debug" additivity="false">
+      <appender-ref ref="Console"/>
+    </logger>
+    <logger name="io.swagger.models.parameters.AbstractSerializableParameter" level="ERROR" additivity="false">
+      <appender-ref ref="Console"/>
+    </logger>
+  </springProfile>
+
+  <root level="info">
+    <springProfile name="debug">
+      <appender-ref ref="Console"/>
+    </springProfile>
+    <appender-ref ref="RollingFileError"/>
+    <appender-ref ref="RollingFileInfo"/>
+  </root>
+</configuration>

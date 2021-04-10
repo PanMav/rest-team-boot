@@ -1,0 +1,29 @@
+server:
+  port: 8086
+
+team:
+  datasource:
+    jdbc-url: "jdbc:oracle:thin:@//192.168.2.56:1521/teamdev"
+    driver-class-name: oracle.jdbc.OracleDriver
+    username: 
+    password: ""
+    minimum-idle: 1
+    maximum-pool-size: 5
+
+
+idm:
+  role-prefix: "APP_"
+  saml:
+    enabled: ${AUTH_ENABLED}
+    idp-url-property: "IDP_URL"
+    idp-url: ${IDP_URL}
+    slo-redirect-path: "/"
+  integration:
+    base-url: ${IDM_API_URL}
+    username: ${IDM_API_USER}
+    password: ${IDM_API_PASS}
+
+
+team-api:
+  log:
+    dir: ${logs_dir}
